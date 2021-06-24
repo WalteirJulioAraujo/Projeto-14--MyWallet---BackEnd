@@ -51,7 +51,7 @@ app.post('/signup', async (req,res)=>{
         res.sendStatus(201);
     }catch(error){
         console.log(error);
-        res.sendStatus(501);
+        return res.sendStatus(500);
     }
     
 })
@@ -102,7 +102,7 @@ app.post('/login', async (req,res)=>{
 
     }catch(error){
         console.log(error);
-        return;
+        return res.sendStatus(500);
     }
 })
 
@@ -167,9 +167,10 @@ app.get('/inout', async (req,res)=>{
         WHERE "userId" = $1
         ORDER BY date
         `,[user.userId]);
+        res.send(transactions.rows);
     }catch(error){
         console.log(error);
-        return;
+        return res.sendStatus(500);
     }
 });
 
