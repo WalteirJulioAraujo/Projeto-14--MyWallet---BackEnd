@@ -3,7 +3,8 @@ import cors from 'cors';
 import pg from 'pg';
 import bcrypt from 'bcrypt';
 import joi from 'joi';
-import { v4 as uuid } from uuid;
+import { v4 as uuid } from 'uuid';
+import dayjs from 'dayjs';
 
 const app = express();
 app.use(cors());
@@ -99,6 +100,45 @@ app.post('/login', async (req,res)=>{
             return res.sendStatus(401);
         }
 
+    }catch(error){
+        console.log(error);
+        return;
+    }
+})
+
+//Ao tentar registrar uam transação recebe { name, value, type }
+app.post('/inout', async (req,res)=>{
+    //Iremos receber do Front o token
+    const authorization = req.headers['authorization'];
+    const token = authorization?.replace('Bearer ', '');
+    if(!token) return res.sendStatus(401);
+    //
+    const { name, value, type } = req.body;
+    const Schema = joi.object({
+        name: joi.string().email().required(),
+        value: joi.number().required(),
+        type: joi.number().required()
+    });
+    const validate = Schema.validate({ name, value, type });
+    if(validate.error){
+        return res.sendStatus(500);
+    }
+    try{
+        const searchUser = await connection.query(`
+        SELECT * FROM session
+        WHERE token=$1
+        `,[token]);
+        if(!searchUser.rows.length){
+            return res.sendStatus(401);
+        }
+        const user = searchUser.rows[0];
+        const date = dayjs().format('YYYY-MM-DD');
+        await connection.query(`
+        INSERT INTO transactions
+        ("userId",date,name,value,type)
+        VALUES ($1,$2,$3,$4,$5)
+        `,[user["userId"],date,name,value,type]);
+        res.sendStatus(201);
     }catch(error){
         console.log(error);
         return;
