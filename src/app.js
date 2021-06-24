@@ -145,6 +145,35 @@ app.post('/inout', async (req,res)=>{
     }
 })
 
+//Front pede todas as transações, enviar tudo do usuario
+app.get('/inout', async (req,res)=>{
+    //Iremos receber do Front o token
+    const authorization = req.headers['authorization'];
+    const token = authorization?.replace('Bearer ', '');
+    if(!token) return res.sendStatus(401);
+    //
+    try{
+        const searchUser = await connection.query(`
+        SELECT * FROM session
+        WHERE token=$1
+        `,[token]);
+        if(!searchUser.rows.length){
+            return res.sendStatus(401);
+        }
+        const user = searchUser.rows[0];
+        const transactions = await connection.query(`
+        SELECT * FROM transactions
+        WHERE "userId"=$1
+        ORDER BY date
+        `,[user.id]);
+        res.send(transactions);
+    }catch(error){
+        console.log(error);
+        return;
+    }
+});
+
+
 app.listen(4001,()=>{
     console.log('Running on port 4001');
 });
