@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import joi from 'joi';
 import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
-import connection from './databaseConfig';
+import connection from './databaseConfig.js';
 
 const app = express();
 app.use(cors());
@@ -158,7 +158,12 @@ app.get('/inout', async (req,res)=>{
         WHERE "userId" = $1
         ORDER BY date
         `,[user.userId]);
-        res.send(transactions.rows);
+
+        let total = 0;
+        transactions.rows.map((e)=>{
+            e.type?total+=e.value:total-=e.value;
+        })
+        res.send({data:transactions.rows,total});
     }catch(error){
         console.log(error);
         return res.sendStatus(500);
@@ -167,6 +172,3 @@ app.get('/inout', async (req,res)=>{
 
 
 export default app;
-
-
-
