@@ -1,24 +1,15 @@
 import express from 'express';
 import cors from 'cors';
-import pg from 'pg';
 import bcrypt from 'bcrypt';
 import joi from 'joi';
 import { v4 as uuid } from 'uuid';
 import dayjs from 'dayjs';
+import connection from './databaseConfig';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const { Pool } = pg;
-const databaseConfig = {
-    user:'postgres',
-    password:'1234567',
-    host:'localhost',
-    port:5432,
-    database:'mywallet'
-}
-const connection = new Pool(databaseConfig);
 
 //Ao se cadastrar recebe {name,email,password};
 app.post('/signup', async (req,res)=>{
@@ -175,9 +166,7 @@ app.get('/inout', async (req,res)=>{
 });
 
 
-app.listen(4001,()=>{
-    console.log('Running on port 4001');
-});
+export default app;
 
 
 
