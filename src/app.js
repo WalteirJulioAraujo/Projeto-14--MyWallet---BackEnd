@@ -94,7 +94,7 @@ app.post('/login', async (req,res)=>{
             INSERT INTO sessions ("userId",token)
             VALUES ($1,$2)
             `,[user.id, token]);
-            res.send(token);
+            res.send({ name: user.name, token });
             return;
         }else{
             return res.sendStatus(401);
@@ -115,17 +115,18 @@ app.post('/inout', async (req,res)=>{
     //
     const { name, value, type } = req.body;
     const Schema = joi.object({
-        name: joi.string().email().required(),
+        name: joi.string().required(),
         value: joi.number().required(),
-        type: joi.number().required()
+        type: joi.boolean().required()
     });
     const validate = Schema.validate({ name, value, type });
     if(validate.error){
+        console.log(validate.error);
         return res.sendStatus(500);
     }
     try{
         const searchUser = await connection.query(`
-        SELECT * FROM session
+        SELECT * FROM sessions
         WHERE token=$1
         `,[token]);
         if(!searchUser.rows.length){
@@ -141,7 +142,7 @@ app.post('/inout', async (req,res)=>{
         res.sendStatus(201);
     }catch(error){
         console.log(error);
-        return;
+        return res.sendStatus(500);
     }
 })
 
@@ -151,10 +152,10 @@ app.get('/inout', async (req,res)=>{
     const authorization = req.headers['authorization'];
     const token = authorization?.replace('Bearer ', '');
     if(!token) return res.sendStatus(401);
-    //
+    //  
     try{
         const searchUser = await connection.query(`
-        SELECT * FROM session
+        SELECT * FROM sessions
         WHERE token=$1
         `,[token]);
         if(!searchUser.rows.length){
@@ -163,10 +164,9 @@ app.get('/inout', async (req,res)=>{
         const user = searchUser.rows[0];
         const transactions = await connection.query(`
         SELECT * FROM transactions
-        WHERE "userId"=$1
+        WHERE "userId" = $1
         ORDER BY date
-        `,[user.id]);
-        res.send(transactions);
+        `,[user.userId]);
     }catch(error){
         console.log(error);
         return;
