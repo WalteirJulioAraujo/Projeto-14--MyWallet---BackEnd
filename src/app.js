@@ -18,7 +18,7 @@ app.post('/signup', async (req,res)=>{
     const Schema = joi.object({
         name: joi.string().required(),
         email: joi.string().email().required(),
-        password: joi.string().required()
+        password: joi.string().min(3).required()
     });
     const validate = Schema.validate({name,email,password});
     if(validate.error){
@@ -53,7 +53,7 @@ app.post('/login', async (req,res)=>{
     const { email, password } = req.body;
     const Schema = joi.object({
         email: joi.string().email().required(),
-        password: joi.string().required()
+        password: joi.string().min(3).required()
     });
     const validate = Schema.validate({ email, password });
     if(validate.error){
@@ -66,8 +66,8 @@ app.post('/login', async (req,res)=>{
         `,[email]);
         
         const user = searchUser.rows[0];
-        const checkPassword = bcrypt.compareSync(password, user.password);
-        if(user && checkPassword){
+        
+        if(user && bcrypt.compareSync(password, user.password)){
             //Antes tenho que ver se o user ja tem alguma session
             const searchIfAlreadyExistSession = await connection.query(`
             SELECT * FROM sessions
@@ -85,7 +85,7 @@ app.post('/login', async (req,res)=>{
             INSERT INTO sessions ("userId",token)
             VALUES ($1,$2)
             `,[user.id, token]);
-            res.send({ name: user.name, token });
+            res.send({ name: user.name, token }).status(200);
             return;
         }else{
             return res.sendStatus(401);
@@ -106,8 +106,8 @@ app.post('/inout', async (req,res)=>{
     //
     const { name, value, type, dateNow } = req.body;
     const Schema = joi.object({
-        name: joi.string().required(),
-        value: joi.number().required(),
+        name: joi.string().min(3).required(),
+        value: joi.number().max(2147483600).required(),
         type: joi.boolean().required(),
         dateNow: joi.number().required()
     });
