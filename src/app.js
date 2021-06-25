@@ -104,13 +104,14 @@ app.post('/inout', async (req,res)=>{
     const token = authorization?.replace('Bearer ', '');
     if(!token) return res.sendStatus(401);
     //
-    const { name, value, type } = req.body;
+    const { name, value, type, dateNow } = req.body;
     const Schema = joi.object({
         name: joi.string().required(),
         value: joi.number().required(),
-        type: joi.boolean().required()
+        type: joi.boolean().required(),
+        dateNow: joi.number().required()
     });
-    const validate = Schema.validate({ name, value, type });
+    const validate = Schema.validate({ name, value, type, dateNow });
     if(validate.error){
         console.log(validate.error);
         return res.sendStatus(500);
@@ -127,9 +128,9 @@ app.post('/inout', async (req,res)=>{
         const date = dayjs().format('YYYY-MM-DD');
         await connection.query(`
         INSERT INTO transactions
-        ("userId",date,name,value,type)
-        VALUES ($1,$2,$3,$4,$5)
-        `,[user["userId"],date,name,value,type]);
+        ("userId",date,name,value,type,datenow)
+        VALUES ($1,$2,$3,$4,$5,$6)
+        `,[user["userId"],date,name,value,type,dateNow]);
         res.sendStatus(201);
     }catch(error){
         console.log(error);
@@ -169,6 +170,45 @@ app.get('/inout', async (req,res)=>{
         return res.sendStatus(500);
     }
 });
+
+app.post('/deleteTransaction', async (req,res)=>{
+
+    const authorization = req.headers['authorization'];
+    const token = authorization?.replace('Bearer ', '');
+    if(!token) return res.sendStatus(401);
+
+    const { date, name, value, type, datenow } = req.body;
+    const Schema = joi.object({
+        date: joi.date().required(),
+        name: joi.string().required(),
+        value: joi.number().required(),
+        type: joi.boolean().required(),
+        datenow: joi.number().required()
+    });
+    const validate = Schema.validate({ date, name, value, type, datenow });
+    if(validate.error){
+        console.log(validate.error);
+        return res.sendStatus(500);
+    } 
+    try{
+        const searchUser = await connection.query(`
+        SELECT * FROM sessions
+        WHERE token=$1
+        `,[token]);
+        if(!searchUser.rows.length){
+            return res.sendStatus(401);
+        }
+        const user = searchUser.rows[0];
+        await connection.query(`
+        DELETE FROM transactions
+        WHERE "userId" = $1 AND date = $2 AND name = $3 AND value = $4 AND type = $5 AND datenow = $6
+        `,[user.userId, date, name, value, type, datenow]);
+        res.sendStatus(200);
+    }catch(error){
+        console.log(error);
+        return res.sendStatus(500);
+    }  
+})
 
 
 export default app;
