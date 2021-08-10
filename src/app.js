@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 
-//Ao se cadastrar recebe {name,email,password};
+
 app.post('/signup', async (req,res)=>{
 
     const { name, email, password } = req.body;
@@ -47,7 +47,7 @@ app.post('/signup', async (req,res)=>{
     
 })
 
-//Ao tentar logar recebe { email, password };
+
 app.post('/login', async (req,res)=>{
 
     const { email, password } = req.body;
@@ -68,7 +68,7 @@ app.post('/login', async (req,res)=>{
         const user = searchUser.rows[0];
         
         if(user && bcrypt.compareSync(password, user.password)){
-            //Antes tenho que ver se o user ja tem alguma session
+            
             const searchIfAlreadyExistSession = await connection.query(`
             SELECT * FROM sessions
             WHERE "userId"=$1
@@ -79,7 +79,7 @@ app.post('/login', async (req,res)=>{
                 WHERE "userId"=$1
                 `,[user.id]);
             }
-            //vou ter que enviar para o front um token
+            
             const token = uuid();
             await connection.query(`
             INSERT INTO sessions ("userId",token)
@@ -97,13 +97,13 @@ app.post('/login', async (req,res)=>{
     }
 })
 
-//Ao tentar registrar uam transação recebe { name, value, type }
+
 app.post('/inout', async (req,res)=>{
-    //Iremos receber do Front o token
+    
     const authorization = req.headers['authorization'];
     const token = authorization?.replace('Bearer ', '');
     if(!token) return res.sendStatus(401);
-    //
+    
     const { name, value, type, dateNow } = req.body;
     const Schema = joi.object({
         name: joi.string().min(3).required(),
@@ -138,13 +138,13 @@ app.post('/inout', async (req,res)=>{
     }
 })
 
-//Front pede todas as transações, enviar tudo do usuario
+
 app.get('/inout', async (req,res)=>{
-    //Iremos receber do Front o token
+    
     const authorization = req.headers['authorization'];
     const token = authorization?.replace('Bearer ', '');
     if(!token) return res.sendStatus(401);
-    //  
+      
     try{
         const searchUser = await connection.query(`
         SELECT * FROM sessions

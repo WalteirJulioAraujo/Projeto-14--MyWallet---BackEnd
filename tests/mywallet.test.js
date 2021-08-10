@@ -1,5 +1,4 @@
 import { afterAll, beforeEach, beforeAll } from '@jest/globals';
-import { TestWatcher } from 'jest';
 import supertest from 'supertest';
 import app from '../src/app.js';
 import connection from '../src/databaseConfig';
