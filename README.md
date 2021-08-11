@@ -19,6 +19,13 @@ The following tools and frameworks were used in the construction of the project:
 3. Follow instructions to run front-end at https://github.com/WalteirJulioAraujo/my-wallet-frontend
 4. Install dependencies</br>
 `npm i`
-5. Run server </br>
-`npm run dev`
-6. Congrats! The app is running 😄
+
+5. Create an .env file based on env.example
+
+6. Run server </br>
+`npm run app`
+
+7. Congrats! The app is running 😄
+
+8. Now, run the front-end with</br>
+`npm start`
