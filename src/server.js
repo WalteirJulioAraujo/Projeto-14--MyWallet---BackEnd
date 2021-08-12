@@ -3,6 +3,6 @@ import app from "./app.js";
 
 const port = process.env.PORT;
 
-app.listen(4001,()=>{
+app.listen(port,()=>{
     console.log(`Running on port ${port}`);
 });
