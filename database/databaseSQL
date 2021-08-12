@@ -1,0 +1,45 @@
+//Essas são as querys necessárias para criar o banco usado pela aplicação MyWallet
+//These are the queries needed to create the database used by the MyWallet application
+
+CREATE TABLE "users" (
+	"id" serial NOT NULL,
+	"name" TEXT NOT NULL,
+	"email" TEXT NOT NULL,
+	"password" TEXT NOT NULL,
+	CONSTRAINT "users_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "sessions" (
+	"id" serial NOT NULL,
+	"userId" integer NOT NULL,
+	"token" TEXT NOT NULL,
+	CONSTRAINT "sessions_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+CREATE TABLE "transactions" (
+	"id" serial NOT NULL,
+	"userId" integer NOT NULL,
+	"date" TEXT NOT NULL,
+	"name" TEXT NOT NULL,
+	"value" integer NOT NULL,
+	"type" BOOLEAN NOT NULL,
+	"datenow" bigint NOT NULL,
+	CONSTRAINT "transactions_pk" PRIMARY KEY ("id")
+) WITH (
+  OIDS=FALSE
+);
+
+
+
+
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_fk0" FOREIGN KEY ("userId") REFERENCES "users"("id");
+
+ALTER TABLE "transactions" ADD CONSTRAINT "transactions_fk0" FOREIGN KEY ("userId") REFERENCES "users"("id");

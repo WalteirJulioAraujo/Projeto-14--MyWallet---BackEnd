@@ -1,3 +1,4 @@
+import "../src/setup.js"
 import { afterAll, beforeEach, beforeAll } from '@jest/globals';
 import supertest from 'supertest';
 import app from '../src/app.js';
@@ -16,8 +17,13 @@ beforeAll( async ()=>{
 
 afterAll( async ()=>{
     await connection.query(`
+    DELETE FROM sessions
+    `);
+    await connection.query(`
+    DELETE FROM transactions
+    `);
+    await connection.query(`
     DELETE FROM users
-    WHERE email = 'test@test.com.br'
     `);
     connection.end();
 })

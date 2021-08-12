@@ -15,17 +15,21 @@ The following tools and frameworks were used in the construction of the project:
 ## **How to run**
 
 1. Clone this repository
+
 2. Clone the front-end repository at https://github.com/WalteirJulioAraujo/my-wallet-frontend
+
 3. Follow instructions to run front-end at https://github.com/WalteirJulioAraujo/my-wallet-frontend
+
 4. Install dependencies</br>
 `npm i`
 
 5. Create an .env file based on env.example
 
-6. Run server </br>
+6. The files needed to create the database used by the application are in the folder "database", you can use dump.sql or databaseSQL(script)
+
+7. Run server </br>
 `npm run app`
 
-7. Congrats! The app is running 😄
+8. Congrats! The app is running 😄
 
-8. Now, run the front-end with</br>
-`npm start`
+
