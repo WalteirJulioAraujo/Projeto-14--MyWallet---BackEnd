@@ -116,7 +116,7 @@ app.post('/inout', async (req,res)=>{
         console.log(validate.error);
         return res.sendStatus(500);
     }
-    console.log(req.body.value)
+    
     try{
         const searchUser = await connection.query(`
         SELECT * FROM sessions
