@@ -4,6 +4,9 @@ This is the backend for the MyWallet application. It was built using NodeJS + Ex
 
 ## **About**
 This project was built with the objective of studying and applying the technologies I learned, in addition, it is a simple and very efficient financial controller that can easily receive features that make it more complete.
+</br>
+</br>
+Try it out now at https://my-wallet-frontend-rho.vercel.app/
 
 ## **Technologies**
 The following tools and frameworks were used in the construction of the project:<br/>
@@ -11,6 +14,7 @@ The following tools and frameworks were used in the construction of the project:
 <img  alt="GIF" src="https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white" width="90px" />
 <img  alt="GIF" src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" width="90px" />
 <img  alt="GIF" src="https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white" width="54px" />
+<img  alt="GIF" src="https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white" width="69px" />
 
 ## **How to run**
 
