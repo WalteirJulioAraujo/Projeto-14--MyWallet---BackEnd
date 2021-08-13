@@ -4,7 +4,7 @@ This is the backend for the MyWallet application. It was built using NodeJS + Ex
 
 ## **About**
 This project was built with the objective of studying and applying the technologies I learned. </br> 
-In addition, it is a simple and very efficient financial controller that can easily receive features that make it more complete. Track your revenues and expenses to learn how you spend your money and know all the time how much you have
+In addition, it is a simple and very efficient financial controller that can easily receive features that make it more complete. Track your revenues and expenses to learn how you spend your money and know all the time how much you have.
 </br>
 </br>
 Try it out now at https://my-wallet-frontend-rho.vercel.app/
